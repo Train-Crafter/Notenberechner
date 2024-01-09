@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21">
+		<attributes>
+			<attribute name="module" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="resources/" including="**/*.java" kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding_1.13.100.v20230708-0916.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding_1.13.100.v20230708-0916.jar"/>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding.beans_1.10.100.v20230708-0916.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding.beans_1.10.100.v20230708-0916.jar"/>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding.observable_1.13.100.v20230708-0916.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding.observable_1.13.100.v20230708-0916.jar"/>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding.property_1.10.100.v20230708-0916.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/org.eclipse.core.databinding.property_1.10.100.v20230708-0916.jar"/>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/org.eclipse.jface.databinding_1.15.100.v20230708-0916.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/org.eclipse.jface.databinding_1.15.100.v20230708-0916.jar"/>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/org.eclipse.equinox.common_3.18.200.v20231106-1826.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/org.eclipse.equinox.common_3.18.200.v20231106-1826.jar"/>
+	<classpathentry kind="lib" path="C:/Users/evilu/.p2/pool/plugins/com.ibm.icu_74.1.0.jar" sourcepath="C:/Users/evilu/.p2/pool/plugins/com.ibm.icu_74.1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
