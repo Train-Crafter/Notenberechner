@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -279,6 +280,35 @@ public class app {
 
 		Menu menu_1 = new Menu(mntmNewSubmenu);
 		mntmNewSubmenu.setMenu(menu_1);
+				
+		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu_1.setText(messages.getString("app.mntmNewSubmenu_1.text")); //$NON-NLS-1$
+		
+		Menu menu_2 = new Menu(mntmNewSubmenu_1);
+		mntmNewSubmenu_1.setMenu(menu_2);
+		
+		MenuItem mntmInfos = new MenuItem(menu_2, SWT.NONE);
+		mntmInfos.setEnabled(false);
+		mntmInfos.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String projektName = "Ihr Projektname";
+		        String projektBeschreibung = "Beschreiben Sie hier Ihr Projekt.";
+		        String javaVersion = "Java-Version: " + System.getProperty("java.version");
+		        String swtVersion = "SWT-Version: " + SWT.getVersion();
+
+		        String dialogText = "Projektname: " + projektName + "\n\n" +
+		                            "Projektbeschreibung: " + projektBeschreibung + "\n\n" +
+		                            javaVersion + "\n" +
+		                            swtVersion;
+
+		        MessageBox messageBox = new MessageBox(shlNotenberechner, SWT.ICON_INFORMATION | SWT.OK);
+		        messageBox.setText("Projektinformationen");
+		        messageBox.setMessage(dialogText);
+		        messageBox.open();
+			}
+		});
+		mntmInfos.setText(messages.getString("app.mntmInfos.text")); //$NON-NLS-1$
 
 		MenuItem mntmSettings = new MenuItem(menu_1, SWT.NONE);
 		mntmSettings.addSelectionListener(new SelectionAdapter() {
@@ -297,7 +327,7 @@ public class app {
 		        display.dispose();
 			}
 		});
-		mntmExit.setText(messages.getString("app.mntmExit.text")); //$NON-NLS-1$ //$NON-NLS-2$
+		mntmExit.setText(messages.getString("app.mntmExit.text"));
 
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -452,4 +482,17 @@ public class app {
 			return ("Fehler");
 		}
 	}
+	
+    private static String leseProjektVersion() {
+        try (InputStream inputStream = app.class.getClassLoader().getResourceAsStream("META-INF/maven/your-group-id/your-artifact-id/pom.properties")) {
+            if (inputStream != null) {
+                Properties properties = new Properties();
+                properties.load(inputStream);
+                return properties.getProperty("version", "Unbekannt");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Unbekannt";
+    }
 }
