@@ -167,7 +167,7 @@ public class app {
 		
 		try {
 			//set window icon
-	        String iconPath = "resources /res/icon.png";
+	        String iconPath = "res/icon.png";
 	        Image icon = new Image(display, app.class.getClassLoader().getResourceAsStream(iconPath));
 	        shlNotenberechner.setImage(icon);
 		} catch (Exception e) {
@@ -353,7 +353,7 @@ public class app {
 								messages.getString("messagesBox.error.message.intConvert"));
 					}
 				} else {
-					ErrorMessageBox(messages.getString("messagesBox.error.title"), "Select one course");
+					ErrorMessageBox(messages.getString("messagesBox.error.title"), messages.getString("messagesBox.error.message.intError"));
 				}
 			}
 		});

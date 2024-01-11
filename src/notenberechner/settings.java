@@ -148,6 +148,8 @@ public class settings extends Shell {
 						close();
 		                app restart = new app();
 		                restart.restart();
+					} else {
+						close();
 					}
 				} else {
 					close();
