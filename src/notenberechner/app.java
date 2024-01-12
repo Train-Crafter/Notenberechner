@@ -35,6 +35,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import java.util.function.Consumer;
 
 public class app {
 	public static ResourceBundle messages = ResourceBundle.getBundle("lang.messages"); //$NON-NLS-1$
@@ -133,7 +137,8 @@ public class app {
 		}
 
 		createContents();
-
+		shlNotenberechner.open();
+		
 		MessageBox infoBox = new MessageBox(shlNotenberechner, SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
 		infoBox.setText(messages.getString("messagesBox.info.title"));
 		infoBox.setMessage(messages.getString("messagesBox.info.message.noten_values"));
@@ -144,8 +149,7 @@ public class app {
 		if (response == SWT.CANCEL) {
 			display.dispose();
 		}
-
-		shlNotenberechner.open();
+		
 		shlNotenberechner.layout();
 
 		while (!shlNotenberechner.isDisposed()) {
@@ -243,6 +247,16 @@ public class app {
 		points_label.setText(messages.getString("app.points_label.text"));
 
 		points_text = new Text(composite_2, SWT.BORDER);
+		points_text.addKeyListener(new KeyAdapter() {
+			@Override
+			 public void keyPressed(KeyEvent e) {
+                if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
+                    // Handle Enter key press
+                    System.out.println("Enter key pressed");
+                    
+                }
+			}
+		});
 		points_text.setText("");
 		GridData gd_points_text = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_points_text.widthHint = 60;
@@ -288,17 +302,19 @@ public class app {
 		mntmNewSubmenu_1.setMenu(menu_2);
 		
 		MenuItem mntmInfos = new MenuItem(menu_2, SWT.NONE);
-		mntmInfos.setEnabled(false);
+		//mntmInfos.setEnabled(false);
 		mntmInfos.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String projektName = "Ihr Projektname";
-		        String projektBeschreibung = "Beschreiben Sie hier Ihr Projekt.";
+				String projektName = "Notenberechner";
+		        String projektBeschreibung = "-";
+		        String projektVersion = leseProjektVersion();
 		        String javaVersion = "Java-Version: " + System.getProperty("java.version");
 		        String swtVersion = "SWT-Version: " + SWT.getVersion();
 
-		        String dialogText = "Projektname: " + projektName + "\n\n" +
-		                            "Projektbeschreibung: " + projektBeschreibung + "\n\n" +
+		        String dialogText = "Projektname: " + projektName + "\n" +
+		                            "Projektbeschreibung: " + projektBeschreibung + "\n" +
+		                            "Projekt-Version: " + projektVersion + "\n\n" +
 		                            javaVersion + "\n" +
 		                            swtVersion;
 
@@ -388,7 +404,7 @@ public class app {
 			}
 		});
 	}
-
+	
 	public void restart() {
 		// Aktuelles Display und Shell schließen
 		display.dispose();
