@@ -368,35 +368,53 @@ public class app {
 				System.out.println("Option 3 ausgewählt: " + h_RadioButton.getSelection());
 
 				if (g_RadioButton.getSelection() || ea_RadioButton.getSelection() || h_RadioButton.getSelection()) {
-					try {
-						max_points = Integer.parseInt(max_points_text.getText());
-						String points_str = points_text.getText();
+					if (max_points_text.getText() != "" && points_text.getText() != "") {
+						try {
+							max_points = Integer.parseInt(max_points_text.getText());
+							String points_str = points_text.getText();
 
-						if (points_str.contains(",")) {
-							points_str = points_str.replace(",", ".");
-						}
-						points = Double.parseDouble(points_str);
+							if (points_str.contains(",")) {
+								points_str = points_str.replace(",", ".");
+							}
+							points = Double.parseDouble(points_str);
 
-						if (max_points >= points) {
-							String note = note_brechnen(max_points, points, n_t_s);
-							String points_out_str = Double.toString(points).replace(".0", "").replace(".", ",");
+							if (max_points >= points) {
+								String note = note_brechnen(max_points, points, n_t_s);
+								String points_out_str = Double.toString(points).replace(".0", "").replace(".", ",");
 
-							max_points_label_out.setText(messages.getString("app.max_points_label.text") + max_points);
-							points_label_out.setText(messages.getString("app.points_label.text") + points_out_str);
-							note_label.setText(messages.getString("app.note_label.text") + note);
+								max_points_label_out.setText(messages.getString("app.max_points_label.text") + max_points);
+								points_label_out.setText(messages.getString("app.points_label.text") + points_out_str);
+								note_label.setText(messages.getString("app.note_label.text") + note);
 
-							points_text.setText("");
-							points_text.setFocus();
+								points_text.setText("");
+								points_text.setFocus();
 
-							// Update with of the text
-							shlNotenberechner.layout(true, true);
-						} else {
+								// Update with of the text
+								shlNotenberechner.layout(true, true);
+							} else {
+								ErrorMessageBox(messages.getString("messagesBox.error.title"),
+										messages.getString("messagesBox.error.message.intToHight"));
+								points_text.setText("");
+								points_text.setFocus();
+							}
+						} catch (NumberFormatException e1) {
 							ErrorMessageBox(messages.getString("messagesBox.error.title"),
-									messages.getString("messagesBox.error.message.intToHight"));
+									messages.getString("messagesBox.error.message.intConvert"));
 						}
-					} catch (NumberFormatException e1) {
-						ErrorMessageBox(messages.getString("messagesBox.error.title"),
-								messages.getString("messagesBox.error.message.intConvert"));
+
+					} else {
+						max_points_label_out.setText(messages.getString("app.max_points_label.text") + "");
+						points_label_out.setText(messages.getString("app.points_label.text") + "");
+						note_label.setText("Fehler");
+						
+						if (max_points_text.getText() == "") {
+							max_points_text.setFocus();							
+						} else if (points_text.getText() == "") {
+							points_text.setFocus();
+						}
+
+						// Update with of the text
+						shlNotenberechner.layout(true, true);
 					}
 				} else {
 					ErrorMessageBox(messages.getString("messagesBox.error.title"), messages.getString("messagesBox.error.message.intError"));
