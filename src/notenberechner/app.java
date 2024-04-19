@@ -40,6 +40,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import java.util.function.Consumer;
 
+import javax.management.loading.PrivateClassLoader;
+
 public class app {
 	public static ResourceBundle messages = ResourceBundle.getBundle("lang.messages"); //$NON-NLS-1$
 
@@ -50,6 +52,7 @@ public class app {
 	private Text points_text;
 	private Text max_points_label_out;
 	private Text points_label_out;
+	private Label note_label;
 
 	private static final String CONFIG_DIR = System.getProperty("user.home") + "/.notenberechner";
 	private static final String PROPERTIES_FILE = CONFIG_DIR + "/config.properties";
@@ -60,6 +63,12 @@ public class app {
 	private static final Properties properties = new Properties();
 	
 	private static String ProjektVersion = null;
+	
+	private Button g_RadioButton;
+	private Button ea_RadioButton;
+	private Button h_RadioButton;
+	
+	
 
 	static {
 		// Stelle sicher, dass der Konfigurationsordner vorhanden ist
@@ -219,13 +228,13 @@ public class app {
 		}
 
 		//butto old
-		Button g_RadioButton = new Button(composite_1, SWT.RADIO);
+		g_RadioButton = new Button(composite_1, SWT.RADIO);
 		g_RadioButton.setText(messages.getString("app.germany.g-kurs.text"));
 
-		Button ea_RadioButton = new Button(composite_1, SWT.RADIO);
+		ea_RadioButton = new Button(composite_1, SWT.RADIO);
 		ea_RadioButton.setText(messages.getString("app.germany.ea-kurs.text"));
 
-		Button h_RadioButton = new Button(composite_1, SWT.RADIO);
+		h_RadioButton = new Button(composite_1, SWT.RADIO);
 		h_RadioButton.setText(messages.getString("app.germany.oberstufe.text")); //$NON-NLS-1$
 		
 		Composite composite_2 = new Composite(composite, SWT.NONE);
@@ -254,6 +263,7 @@ public class app {
                     // Handle Enter key press
                     System.out.println("Enter key pressed");
                     
+                    getNumber();
                 }
 			}
 		});
@@ -278,7 +288,7 @@ public class app {
 		points_label_out = new Text(composite_3, SWT.READ_ONLY);
 		points_label_out.setText(messages.getString("app.points_label.text")); //$NON-NLS-1$
 
-		Label note_label = new Label(composite, SWT.NONE);
+		note_label = new Label(composite, SWT.NONE);
 		note_label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		note_label.setText(messages.getString("app.note_label.text")); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -344,11 +354,12 @@ public class app {
 			}
 		});
 		mntmExit.setText(messages.getString("app.mntmExit.text"));
-
+		
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// Convert String to int
+				getNumber();
+				/*// Convert String to int
 				int max_points = 0;
 				Double points = 0.0;
 				int n_t_s = 0;
@@ -418,9 +429,84 @@ public class app {
 					}
 				} else {
 					ErrorMessageBox(messages.getString("messagesBox.error.title"), messages.getString("messagesBox.error.message.intError"));
-				}
+				}*/
 			}
 		});
+	}
+	
+	private void getNumber() {
+
+		// Convert String to int
+		int max_points = 0;
+		Double points = 0.0;
+		int n_t_s = 0;
+
+		if (g_RadioButton.getSelection()) {
+			n_t_s = 1;
+		}
+		if (ea_RadioButton.getSelection()) {
+			n_t_s = 2;
+		}
+		if (h_RadioButton.getSelection()) {
+			n_t_s = 3;
+		}
+
+		System.out.println("Option 1 ausgewählt: " + g_RadioButton.getSelection());
+		System.out.println("Option 2 ausgewählt: " + ea_RadioButton.getSelection());
+		System.out.println("Option 3 ausgewählt: " + h_RadioButton.getSelection());
+
+		if (g_RadioButton.getSelection() || ea_RadioButton.getSelection() || h_RadioButton.getSelection()) {
+			if (max_points_text.getText() != "" && points_text.getText() != "") {
+				try {
+					max_points = Integer.parseInt(max_points_text.getText());
+					String points_str = points_text.getText();
+
+					if (points_str.contains(",")) {
+						points_str = points_str.replace(",", ".");
+					}
+					points = Double.parseDouble(points_str);
+
+					if (max_points >= points) {
+						String note = note_brechnen(max_points, points, n_t_s);
+						String points_out_str = Double.toString(points).replace(".0", "").replace(".", ",");
+
+						max_points_label_out.setText(messages.getString("app.max_points_label.text") + max_points);
+						points_label_out.setText(messages.getString("app.points_label.text") + points_out_str);
+						note_label.setText(messages.getString("app.note_label.text") + note);
+
+						points_text.setText("");
+						points_text.setFocus();
+
+						// Update with of the text
+						shlNotenberechner.layout(true, true);
+					} else {
+						ErrorMessageBox(messages.getString("messagesBox.error.title"),
+								messages.getString("messagesBox.error.message.intToHight"));
+						points_text.setText("");
+						points_text.setFocus();
+					}
+				} catch (NumberFormatException e1) {
+					ErrorMessageBox(messages.getString("messagesBox.error.title"),
+							messages.getString("messagesBox.error.message.intConvert"));
+				}
+
+			} else {
+				max_points_label_out.setText(messages.getString("app.max_points_label.text") + "");
+				points_label_out.setText(messages.getString("app.points_label.text") + "");
+				note_label.setText("Fehler");
+				
+				if (max_points_text.getText() == "") {
+					max_points_text.setFocus();							
+				} else if (points_text.getText() == "") {
+					points_text.setFocus();
+				}
+
+				// Update with of the text
+				shlNotenberechner.layout(true, true);
+			}
+		} else {
+			ErrorMessageBox(messages.getString("messagesBox.error.title"), messages.getString("messagesBox.error.message.intError"));
+		}
 	}
 	
 	public void restart() {

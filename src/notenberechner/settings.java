@@ -186,7 +186,7 @@ public class settings extends Shell {
 		tblclmnNewColumn.setWidth(120);
 		tblclmnNewColumn.setText(messages.getString("settings.Data.Column.text"));
 	
-		for (int i = 0; i < 16; i++) {
+		for (int i = 15; i > -1; i--) {
 			TableColumn tableColumn = new TableColumn(table, SWT.NONE);
 			tableColumn.setWidth(30);
 			if (i > 9) {
