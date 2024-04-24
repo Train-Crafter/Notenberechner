@@ -57,7 +57,7 @@ public class settings extends Shell {
 
     static {
         // Mapping of country names to country codes
-        COUNTRY_MAP.put("USA", "en_US");
+        COUNTRY_MAP.put("English", "en_US");
         COUNTRY_MAP.put("Germany", "de_DE");
     }
     
@@ -119,6 +119,15 @@ public class settings extends Shell {
 		language_combo.setItems(COUNTRY_MAP.keySet().toArray(new String[0]));
 		language_combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		language_combo.setText(messages.getString("settings.combo.text")); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		Label lblNewLabel_2 = new Label(composite, SWT.NONE);
+		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_2.setText(messages.getString("settings.lblNewLabel_2.text"));
+		
+		Combo combo = new Combo(composite, SWT.NONE);
+		combo.setEnabled(false);
+		combo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		combo.setText(messages.getString("settings.country.text")); //$NON-NLS-1$ //$NON-NLS-2$
 		new Label(composite, SWT.NONE);
 		
 		Composite composite_1 = new Composite(composite, SWT.NONE);
@@ -188,7 +197,7 @@ public class settings extends Shell {
 	
 		for (int i = 15; i > -1; i--) {
 			TableColumn tableColumn = new TableColumn(table, SWT.NONE);
-			tableColumn.setWidth(30);
+			tableColumn.setWidth(37);
 			if (i > 9) {
     			tableColumn.setText(String.valueOf(i)); //$NON-NLS-1$
             } else {
@@ -213,7 +222,7 @@ public class settings extends Shell {
 	            TableItem item = new TableItem(table, SWT.NONE);
 	            item.setText(0, keyAtIndex);
 				for (int j = 0; j < array.length; j++) {
-		            item.setText(j + 1, String.valueOf(array[j]));
+		            item.setText(j + 1, String.valueOf(array[j]) + "%");
 				}
 			}			
 		} catch (Exception e2) {
