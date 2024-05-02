@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -623,6 +624,7 @@ public class app {
 				n_t_int[i] = Integer.parseInt(n_t_array[i]);
 			}
 
+			int[] n = new int[0];
 			double n_15 = max_points * n_t_int[0] / 100.0;
 			double n_14 = max_points * n_t_int[1] / 100.0;
 			double n_13 = max_points * n_t_int[2] / 100.0;
@@ -643,7 +645,7 @@ public class app {
             TableItem[] items = table.getItems();
             for (TableItem item : items) {
                 for (int i = 0; i < 3; i++) {
-                    item.setText(1, "Aktualisiert, Zeile " + (table.indexOf(item) + 1) + ", Spalte " + (i + 1));
+                    item.setText(1, "#a");
                 }
             }
 
