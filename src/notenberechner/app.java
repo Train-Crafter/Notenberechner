@@ -41,6 +41,8 @@ import org.eclipse.swt.events.KeyListener;
 import java.util.function.Consumer;
 
 import javax.management.loading.PrivateClassLoader;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
 public class app {
 	public static ResourceBundle messages = ResourceBundle.getBundle("lang.messages"); //$NON-NLS-1$
@@ -63,10 +65,12 @@ public class app {
 	private static final Properties properties = new Properties();
 	
 	private static String ProjektVersion = null;
+	private static Boolean showPunkteTabelle = false;
 	
 	private Button g_RadioButton;
 	private Button ea_RadioButton;
 	private Button h_RadioButton;
+	private Table table;
 	
 	
 
@@ -149,6 +153,7 @@ public class app {
 		shlNotenberechner.open();
 		
 		MessageBox infoBox = new MessageBox(shlNotenberechner, SWT.ICON_INFORMATION | SWT.OK | SWT.CANCEL);
+			
 		infoBox.setText(messages.getString("messagesBox.info.title"));
 		infoBox.setMessage(messages.getString("messagesBox.info.message.noten_values"));
 		// Die Methode open gibt den Wert des vom Benutzer ausgewählten Buttons zurück
@@ -175,9 +180,8 @@ public class app {
 	 */
 	protected void createContents() {
 		shlNotenberechner =  new Shell();
-		shlNotenberechner.setSize(400, 280);
+		shlNotenberechner.setSize(420, 280);
 		shlNotenberechner.setText("Notenberechner");
-		shlNotenberechner.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		try {
 			//set window icon
@@ -187,9 +191,21 @@ public class app {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		GridLayout gl_shlNotenberechner = new GridLayout(2, false);
+		gl_shlNotenberechner.marginBottom = 5;
+		gl_shlNotenberechner.marginHeight = 0;
+		gl_shlNotenberechner.verticalSpacing = 0;
+		gl_shlNotenberechner.horizontalSpacing = 2;
+		shlNotenberechner.setLayout(gl_shlNotenberechner);
 
 		Composite composite = new Composite(shlNotenberechner, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.horizontalSpacing = 0;
+		gl_composite.verticalSpacing = 0;
+		gl_composite.marginHeight = 0;
+		gl_composite.marginWidth = 0;
+		composite.setLayout(gl_composite);
 
 		Label lblNewLabel = new Label(composite, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false));
@@ -239,7 +255,7 @@ public class app {
 		
 		Composite composite_2 = new Composite(composite, SWT.NONE);
 		composite_2.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		composite_2.setLayout(new GridLayout(2, false));
+		composite_2.setLayout(new GridLayout(3, false));
 
 		Label max_points_label = new Label(composite_2, SWT.NONE);
 		max_points_label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -250,6 +266,33 @@ public class app {
 		GridData gd_max_points_text = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_max_points_text.widthHint = 60;
 		max_points_text.setLayoutData(gd_max_points_text);
+		
+		Button btnNewButton = new Button(composite_2, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (showPunkteTabelle) {
+					GridData tableGridData = (GridData) table.getLayoutData();
+		            tableGridData.exclude = true;
+		            table.setVisible(false);
+		            System.out.print("Tabelle off");
+		            shlNotenberechner.layout(true, true);
+		            
+		            showPunkteTabelle = false;
+				}
+				else {	
+					GridData tableGridData = (GridData) table.getLayoutData();
+		            tableGridData.exclude = false;
+		            table.setVisible(true);
+		            System.out.print("Tabelle on");
+		            shlNotenberechner.layout(true, true);
+		            
+		            showPunkteTabelle = true;				
+				}
+			}
+		});
+		btnNewButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 2));
+		btnNewButton.setText(messages.getString("app.btnNewButton.text")); //$NON-NLS-1$
 
 		Label points_label = new Label(composite_2, SWT.NONE);
 		points_label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -354,6 +397,43 @@ public class app {
 			}
 		});
 		mntmExit.setText(messages.getString("app.mntmExit.text"));
+		
+		//Noten pukte tabelle
+		Composite notenPunkteTabelle = new Composite(shlNotenberechner, SWT.NONE);
+		GridLayout gl_notenPunkteTabelle = new GridLayout(1, false);
+		gl_notenPunkteTabelle.verticalSpacing = 0;
+		gl_notenPunkteTabelle.marginWidth = 0;
+		gl_notenPunkteTabelle.marginHeight = 0;
+		gl_notenPunkteTabelle.horizontalSpacing = 0;
+		notenPunkteTabelle.setLayout(gl_notenPunkteTabelle);
+		notenPunkteTabelle.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, true, 1, 1));
+		notenPunkteTabelle.setVisible(true);
+		
+		table = new Table(notenPunkteTabelle, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setResizable(false);
+		tblclmnNewColumn.setWidth(50);
+		tblclmnNewColumn.setText(messages.getString("app.tblclmnNewColumn.text")); //$NON-NLS-1$
+		
+		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_1.setResizable(false);
+		tblclmnNewColumn_1.setWidth(50);
+		tblclmnNewColumn_1.setText(messages.getString("app.tblclmnNewColumn_1.text"));
+		
+		//add item to table
+		for (int i = 15; i > -1; i--) {
+            TableItem item = new TableItem(table, SWT.NONE);
+			if (i > 9) {
+				item.setText(0, String.valueOf(i)); //$NON-NLS-1$
+            } else {
+            	item.setText(0, "0" + i); //$NON-NLS-1$
+            }
+        	item.setText(1, "#");
+		}
 		
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -558,6 +638,14 @@ public class app {
 			double n_3 = max_points * n_t_int[12] / 100.0;
 			double n_2 = max_points * n_t_int[13] / 100.0;
 			double n_1 = max_points * n_t_int[14] / 100.0;
+			
+
+            TableItem[] items = table.getItems();
+            for (TableItem item : items) {
+                for (int i = 0; i < 3; i++) {
+                    item.setText(1, "Aktualisiert, Zeile " + (table.indexOf(item) + 1) + ", Spalte " + (i + 1));
+                }
+            }
 
 			int note = 0;
 
