@@ -648,12 +648,6 @@ public class app {
 	        nArray[13] = max_points * n_t_int[13] / 100.0;
 			nArray[14] = max_points * n_t_int[14] / 100.0;
 			nArray[15] = 0;
-			
-			
-	        // Accessing and printing array elements
-	        for (int i = 0; i < nArray.length; i++) {
-	            System.out.println("Element at index " + i + " : " + nArray[i]);
-	        }
 	        
             TableItem[] items = table.getItems();
             for (TableItem item : items) {
