@@ -44,6 +44,8 @@ import java.util.function.Consumer;
 import javax.management.loading.PrivateClassLoader;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.graphics.Point;
 
 public class app {
 	public static ResourceBundle messages = ResourceBundle.getBundle("lang.messages"); //$NON-NLS-1$
@@ -180,8 +182,10 @@ public class app {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shlNotenberechner =  new Shell();
-		shlNotenberechner.setSize(420, 280);
+		shlNotenberechner = new Shell(SWT.CLOSE | SWT.MIN | SWT.RESIZE | SWT.TITLE);
+		shlNotenberechner.setSize(430, 280);
+		shlNotenberechner.setMaximumSize(500, 300);
+		shlNotenberechner.setMinimumSize(430, 280);
 		shlNotenberechner.setText("Notenberechner");
 		
 		try {
@@ -315,6 +319,7 @@ public class app {
 		GridData gd_points_text = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_points_text.widthHint = 60;
 		points_text.setLayoutData(gd_points_text);
+		composite_2.setTabList(new Control[]{max_points_text, points_text, btnNewButton});
 
 		Button btnNewButton_3 = new Button(composite, SWT.NONE);
 		btnNewButton_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
@@ -417,12 +422,12 @@ public class app {
         
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setResizable(false);
-		tblclmnNewColumn.setWidth(50);
+		tblclmnNewColumn.setWidth(40);
 		tblclmnNewColumn.setText(messages.getString("app.tblclmnNewColumn.text")); //$NON-NLS-1$
 		
 		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn_1.setResizable(false);
-		tblclmnNewColumn_1.setWidth(50);
+		tblclmnNewColumn_1.setWidth(65);
 		tblclmnNewColumn_1.setText(messages.getString("app.tblclmnNewColumn_1.text"));
 		
 		//add item to table
@@ -624,7 +629,38 @@ public class app {
 				n_t_int[i] = Integer.parseInt(n_t_array[i]);
 			}
 
-			int[] n = new int[0];
+	        // Declaring an array of integers
+			double[] nArray = new double[16]; // Creating an array of size 5	        
+
+	        nArray[0] = max_points * n_t_int[0] / 100.0;
+	        nArray[1] = max_points * n_t_int[1] / 100.0;
+	        nArray[2] = max_points * n_t_int[2] / 100.0;
+	        nArray[3] = max_points * n_t_int[3] / 100.0;
+	        nArray[4] = max_points * n_t_int[4] / 100.0;
+	        nArray[5] = max_points * n_t_int[5] / 100.0;
+	        nArray[6] = max_points * n_t_int[6] / 100.0;
+	        nArray[7] = max_points * n_t_int[7] / 100.0;
+	        nArray[8] = max_points * n_t_int[8] / 100.0;
+	        nArray[9] = max_points * n_t_int[9] / 100.0;
+	        nArray[10] = max_points * n_t_int[10] / 100.0;
+	        nArray[11] = max_points * n_t_int[11] / 100.0;
+	        nArray[12] = max_points * n_t_int[12] / 100.0;
+	        nArray[13] = max_points * n_t_int[13] / 100.0;
+			nArray[14] = max_points * n_t_int[14] / 100.0;
+			nArray[15] = 0;
+			
+			
+	        // Accessing and printing array elements
+	        for (int i = 0; i < nArray.length; i++) {
+	            System.out.println("Element at index " + i + " : " + nArray[i]);
+	        }
+	        
+            TableItem[] items = table.getItems();
+            for (TableItem item : items) {
+                item.setText(1, String.valueOf(nArray[(table.indexOf(item))]));
+                //item.setText(1, "Aktualisiert, Zeile " + (table.indexOf(item) + 1));
+            }
+			
 			double n_15 = max_points * n_t_int[0] / 100.0;
 			double n_14 = max_points * n_t_int[1] / 100.0;
 			double n_13 = max_points * n_t_int[2] / 100.0;
@@ -641,14 +677,6 @@ public class app {
 			double n_2 = max_points * n_t_int[13] / 100.0;
 			double n_1 = max_points * n_t_int[14] / 100.0;
 			
-
-            TableItem[] items = table.getItems();
-            for (TableItem item : items) {
-                for (int i = 0; i < 3; i++) {
-                    item.setText(1, "#a");
-                }
-            }
-
 			int note = 0;
 
 			if (n_15 <= points)
@@ -693,7 +721,12 @@ public class app {
 		}
 	}
 	
-    private static String leseProjektVersion() {
+    private int indexOf(TableItem[] items) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private static String leseProjektVersion() {
         try (InputStream inputStream = app.class.getClassLoader().getResourceAsStream("META-INF/maven/your-group-id/your-artifact-id/pom.properties")) {
             if (inputStream != null) {
                 Properties properties = new Properties();
