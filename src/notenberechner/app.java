@@ -46,8 +46,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
+import org.eclipse.core.databinding.observable.Realm;
+import org.eclipse.jface.databinding.swt.DisplayRealm;
 
 public class app {
+	private DataBindingContext m_bindingContext;
 	public static ResourceBundle messages = ResourceBundle.getBundle("lang.messages"); //$NON-NLS-1$
 
 	protected Shell shlNotenberechner;
@@ -74,6 +80,7 @@ public class app {
 	private Button ea_RadioButton;
 	private Button h_RadioButton;
 	private Table table;
+	private Table table_1;
 	
 	
 
@@ -124,12 +131,17 @@ public class app {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		try {
-			app window = new app();
-			window.open();
-		} catch (Exception window_error) {
-			window_error.printStackTrace();
-		}
+		Display display = Display.getDefault();
+		Realm.runWithDefault(DisplayRealm.getRealm(display), new Runnable() {
+			public void run() {
+				try {
+					app window = new app();
+					window.open();
+				} catch (Exception window_error) {
+					window_error.printStackTrace();
+				}
+			}
+		});
 	}
 
 	/**
@@ -184,7 +196,7 @@ public class app {
 	protected void createContents() {
 		shlNotenberechner = new Shell(SWT.CLOSE | SWT.MIN | SWT.RESIZE | SWT.TITLE);
 		shlNotenberechner.setSize(430, 280);
-		shlNotenberechner.setMaximumSize(500, 330);
+		shlNotenberechner.setMaximumSize(600, 380);
 		shlNotenberechner.setMinimumSize(430, 280);
 		shlNotenberechner.setText("Notenberechner");
 		
@@ -320,129 +332,10 @@ public class app {
 		gd_points_text.widthHint = 60;
 		points_text.setLayoutData(gd_points_text);
 		composite_2.setTabList(new Control[]{max_points_text, points_text, btnNewButton});
-
+		
 		Button btnNewButton_3 = new Button(composite, SWT.NONE);
-		btnNewButton_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		btnNewButton_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		btnNewButton_3.setText(messages.getString("app.btnNewButton_3.text"));
-
-		Composite composite_3 = new Composite(composite, SWT.NONE);
-		composite_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
-		RowLayout rl_composite_3 = new RowLayout(SWT.HORIZONTAL);
-		rl_composite_3.fill = true;
-		composite_3.setLayout(rl_composite_3);
-
-		max_points_label_out = new Text(composite_3, SWT.READ_ONLY);
-		max_points_label_out.setText(messages.getString("app.max_points_label.text")); //$NON-NLS-1$
-
-		points_label_out = new Text(composite_3, SWT.READ_ONLY);
-		points_label_out.setText(messages.getString("app.points_label.text")); //$NON-NLS-1$
-
-		note_label = new Label(composite, SWT.NONE);
-		note_label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		note_label.setText(messages.getString("app.note_label.text")); //$NON-NLS-1$ //$NON-NLS-2$
-
-		Label lblNewLabel_5 = new Label(composite, SWT.NONE);
-		lblNewLabel_5.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 1, 1));
-		lblNewLabel_5.setText(messages.getString("main.version.text") + ProjektVersion); //$NON-NLS-1$
-
-		Menu menu = new Menu(shlNotenberechner, SWT.BAR);
-		shlNotenberechner.setMenuBar(menu);
-
-		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
-		mntmNewSubmenu.setText(messages.getString("app.mntmNewSubmenu.text")); //$NON-NLS-1$ //$NON-NLS-2$
-
-		Menu menu_1 = new Menu(mntmNewSubmenu);
-		mntmNewSubmenu.setMenu(menu_1);
-				
-		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
-		mntmNewSubmenu_1.setText(messages.getString("app.mntmNewSubmenu_1.text")); //$NON-NLS-1$
-		
-		Menu menu_2 = new Menu(mntmNewSubmenu_1);
-		mntmNewSubmenu_1.setMenu(menu_2);
-		
-		MenuItem mntmInfos = new MenuItem(menu_2, SWT.NONE);
-		//mntmInfos.setEnabled(false);
-		mntmInfos.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String projektName = "Notenberechner";
-		        String projektBeschreibung = "-";
-		        String projektVersion = leseProjektVersion();
-		        String javaVersion = "Java-Version: " + System.getProperty("java.version");
-		        String swtVersion = "SWT-Version: " + SWT.getVersion();
-
-		        String dialogText = "Projektname: " + projektName + "\n" +
-		                            "Projektbeschreibung: " + projektBeschreibung + "\n" +
-		                            "Projekt-Version: " + projektVersion + "\n\n" +
-		                            javaVersion + "\n" +
-		                            swtVersion;
-
-		        MessageBox messageBox = new MessageBox(shlNotenberechner, SWT.ICON_INFORMATION | SWT.OK);
-		        messageBox.setText("Projektinformationen");
-		        messageBox.setMessage(dialogText);
-		        messageBox.open();
-			}
-		});
-		mntmInfos.setText(messages.getString("app.mntmInfos.text")); //$NON-NLS-1$
-
-		MenuItem mntmSettings = new MenuItem(menu_1, SWT.NONE);
-		mntmSettings.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				settings settings = new settings(null);
-				settings.open();
-			}
-		});
-		mntmSettings.setText(messages.getString("settings.text")); //$NON-NLS-1$ //$NON-NLS-2$
-
-		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
-		mntmExit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-		        display.dispose();
-			}
-		});
-		mntmExit.setText(messages.getString("app.mntmExit.text"));
-		
-		//Noten pukte tabelle
-		Composite notenPunkteTabelle = new Composite(shlNotenberechner, SWT.NONE);
-		GridLayout gl_notenPunkteTabelle = new GridLayout(1, false);
-		gl_notenPunkteTabelle.verticalSpacing = 0;
-		gl_notenPunkteTabelle.marginWidth = 0;
-		gl_notenPunkteTabelle.marginHeight = 0;
-		gl_notenPunkteTabelle.horizontalSpacing = 0;
-		notenPunkteTabelle.setLayout(gl_notenPunkteTabelle);
-		notenPunkteTabelle.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, true, 1, 1));
-		notenPunkteTabelle.setVisible(true);
-		
-		table = new Table(notenPunkteTabelle, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-        GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gd_table.exclude = true;
-        table.setLayoutData(gd_table);
-        table.setVisible(false);
-        
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn.setResizable(false);
-		tblclmnNewColumn.setWidth(40);
-		tblclmnNewColumn.setText(messages.getString("app.tblclmnNewColumn.text")); //$NON-NLS-1$
-		
-		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn_1.setResizable(false);
-		tblclmnNewColumn_1.setWidth(65);
-		tblclmnNewColumn_1.setText(messages.getString("app.tblclmnNewColumn_1.text"));
-		
-		//add item to table
-		for (int i = 15; i > -1; i--) {
-            TableItem item = new TableItem(table, SWT.NONE);
-			if (i > 9) {
-				item.setText(0, String.valueOf(i)); //$NON-NLS-1$
-            } else {
-            	item.setText(0, "0" + i); //$NON-NLS-1$
-            }
-        	item.setText(1, "#");
-		}
 		
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -521,6 +414,187 @@ public class app {
 				}*/
 			}
 		});
+
+		Composite composite_3 = new Composite(composite, SWT.NONE);
+		composite_3.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		RowLayout rl_composite_3 = new RowLayout(SWT.HORIZONTAL);
+		rl_composite_3.fill = true;
+		composite_3.setLayout(rl_composite_3);
+
+		max_points_label_out = new Text(composite_3, SWT.READ_ONLY);
+		max_points_label_out.setText(messages.getString("app.max_points_label.text")); //$NON-NLS-1$
+
+		points_label_out = new Text(composite_3, SWT.READ_ONLY);
+		points_label_out.setText(messages.getString("app.points_label.text")); //$NON-NLS-1$
+
+		note_label = new Label(composite, SWT.NONE);
+		note_label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
+		note_label.setText(messages.getString("app.note_label.text")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		Label lblNewLabel_5 = new Label(composite, SWT.NONE);
+		lblNewLabel_5.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true, 1, 1));
+		lblNewLabel_5.setText(messages.getString("main.version.text") + ProjektVersion);
+
+		Menu menu = new Menu(shlNotenberechner, SWT.BAR);
+		shlNotenberechner.setMenuBar(menu);
+
+		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu.setText(messages.getString("app.mntmNewSubmenu.text")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		Menu menu_1 = new Menu(mntmNewSubmenu);
+		mntmNewSubmenu.setMenu(menu_1);
+		
+		MenuItem mntmNewSubmenu_2 = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu_2.setText(messages.getString("app.mntmNewSubmenu_2.text")); //$NON-NLS-1$
+		
+		Menu menu_3 = new Menu(mntmNewSubmenu_2);
+		mntmNewSubmenu_2.setMenu(menu_3);
+		
+		MenuItem mntmViews = new MenuItem(menu_3, SWT.CASCADE);
+		mntmViews.setText(messages.getString("app.mntmViews.text")); //$NON-NLS-1$
+		
+		Menu menu_4 = new Menu(mntmViews);
+		mntmViews.setMenu(menu_4);
+		
+		MenuItem mntmVerlauf = new MenuItem(menu_4, SWT.CHECK);
+		mntmVerlauf.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+                boolean isChecked = mntmVerlauf.getSelection();
+
+				GridData tableGridData = (GridData) table_1.getLayoutData();
+	            tableGridData.exclude = !isChecked;
+	            table_1.setVisible(isChecked);
+	            System.out.print("Tabelle: "+ isChecked);
+	            shlNotenberechner.layout(true, true);
+			}
+		});
+		mntmVerlauf.setText(messages.getString("app.mntmVerlauf.text")); //$NON-NLS-1$
+				
+		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu_1.setText(messages.getString("app.mntmNewSubmenu_1.text")); //$NON-NLS-1$
+		
+		Menu menu_2 = new Menu(mntmNewSubmenu_1);
+		mntmNewSubmenu_1.setMenu(menu_2);
+		
+		MenuItem mntmInfos = new MenuItem(menu_2, SWT.NONE);
+		//mntmInfos.setEnabled(false);
+		mntmInfos.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String projektName = "Notenberechner";
+		        String projektBeschreibung = "-";
+		        String projektVersion = leseProjektVersion();
+		        String javaVersion = "Java-Version: " + System.getProperty("java.version");
+		        String swtVersion = "SWT-Version: " + SWT.getVersion();
+
+		        String dialogText = "Projektname: " + projektName + "\n" +
+		                            "Projektbeschreibung: " + projektBeschreibung + "\n" +
+		                            "Projekt-Version: " + projektVersion + "\n\n" +
+		                            javaVersion + "\n" +
+		                            swtVersion;
+
+		        MessageBox messageBox = new MessageBox(shlNotenberechner, SWT.ICON_INFORMATION | SWT.OK);
+		        messageBox.setText("Projektinformationen");
+		        messageBox.setMessage(dialogText);
+		        messageBox.open();
+			}
+		});
+		mntmInfos.setText(messages.getString("app.mntmInfos.text")); //$NON-NLS-1$
+
+		MenuItem mntmSettings = new MenuItem(menu_1, SWT.NONE);
+		mntmSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				settings settings = new settings(null);
+				settings.open();
+			}
+		});
+		mntmSettings.setText(messages.getString("settings.text")); //$NON-NLS-1$ //$NON-NLS-2$
+
+		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
+		mntmExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+		        display.dispose();
+			}
+		});
+		mntmExit.setText(messages.getString("app.mntmExit.text"));
+		
+		//Noten pukte tabelle
+		Composite notenPunkteTabelle = new Composite(shlNotenberechner, SWT.NONE);
+		GridLayout gl_notenPunkteTabelle = new GridLayout(1, false);
+		gl_notenPunkteTabelle.verticalSpacing = 0;
+		gl_notenPunkteTabelle.marginWidth = 0;
+		gl_notenPunkteTabelle.marginHeight = 0;
+		gl_notenPunkteTabelle.horizontalSpacing = 0;
+		notenPunkteTabelle.setLayout(gl_notenPunkteTabelle);
+		notenPunkteTabelle.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, false, true, 1, 2));
+		notenPunkteTabelle.setVisible(true);
+		
+		table = new Table(notenPunkteTabelle, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+        GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd_table.exclude = true;
+        table.setLayoutData(gd_table);
+        table.setVisible(false);
+        
+		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setResizable(false);
+		tblclmnNewColumn.setWidth(40);
+		tblclmnNewColumn.setText(messages.getString("app.tblclmnNewColumn.text")); //$NON-NLS-1$
+		
+		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_1.setResizable(false);
+		tblclmnNewColumn_1.setWidth(65);
+		tblclmnNewColumn_1.setText(messages.getString("app.tblclmnNewColumn_1.text"));
+		
+
+		Composite compositeVerlauf = new Composite(shlNotenberechner, SWT.NONE);
+		GridLayout gl_compositeVerlauf = new GridLayout(1, false);
+		gl_compositeVerlauf.verticalSpacing = 0;
+		gl_compositeVerlauf.marginWidth = 0;
+		gl_compositeVerlauf.marginHeight = 0;
+		gl_compositeVerlauf.horizontalSpacing = 0;
+		compositeVerlauf.setLayout(gl_compositeVerlauf);
+		compositeVerlauf.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		
+		table_1 = new Table(compositeVerlauf, SWT.BORDER | SWT.FULL_SELECTION);
+		GridData gd_table_1 = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_table_1.exclude = true;
+		table_1.setLayoutData(gd_table_1);
+		table_1.setHeaderVisible(true);
+		table_1.setLinesVisible(true);
+		
+		TableColumn tblclmnCourse = new TableColumn(table_1, SWT.NONE);
+		tblclmnCourse.setWidth(100);
+		tblclmnCourse.setText(messages.getString("app.tblclmnCourse.text")); //$NON-NLS-1$
+		
+		TableColumn tblclmnMaxPoints = new TableColumn(table_1, SWT.NONE);
+		tblclmnMaxPoints.setWidth(100);
+		tblclmnMaxPoints.setText(messages.getString("app.tblclmnMaxPoints.text")); //$NON-NLS-1$
+		
+		TableColumn tblclmnReachedPpoints = new TableColumn(table_1, SWT.NONE);
+		tblclmnReachedPpoints.setWidth(100);
+		tblclmnReachedPpoints.setText(messages.getString("app.tblclmnReachedPpoints.text")); //$NON-NLS-1$
+		
+		TableColumn tblclmnGrade = new TableColumn(table_1, SWT.NONE);
+		tblclmnGrade.setWidth(100);
+		tblclmnGrade.setText(messages.getString("app.tblclmnGrade.text")); //$NON-NLS-1$
+		
+		
+		//add item to table
+		for (int i = 15; i > -1; i--) {
+            TableItem item = new TableItem(table, SWT.NONE);
+			if (i > 9) {
+				item.setText(0, String.valueOf(i)); //$NON-NLS-1$
+            } else {
+            	item.setText(0, "0" + i); //$NON-NLS-1$
+            }
+        	item.setText(1, "#");
+		}
+		m_bindingContext = initDataBindings();
 	}
 	
 	private void getNumber() {
@@ -735,4 +809,9 @@ public class app {
         }
         return "Unbekannt";
     }
+	protected DataBindingContext initDataBindings() {
+		DataBindingContext bindingContext = new DataBindingContext();
+		//
+		return bindingContext;
+	}
 }
