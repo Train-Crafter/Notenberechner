@@ -184,7 +184,7 @@ public class app {
 	protected void createContents() {
 		shlNotenberechner = new Shell(SWT.CLOSE | SWT.MIN | SWT.RESIZE | SWT.TITLE);
 		shlNotenberechner.setSize(430, 280);
-		shlNotenberechner.setMaximumSize(500, 300);
+		shlNotenberechner.setMaximumSize(500, 330);
 		shlNotenberechner.setMinimumSize(430, 280);
 		shlNotenberechner.setText("Notenberechner");
 		
@@ -418,7 +418,10 @@ public class app {
 		table = new Table(notenPunkteTabelle, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        GridData gd_table = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gd_table.exclude = true;
+        table.setLayoutData(gd_table);
+        table.setVisible(false);
         
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setResizable(false);
